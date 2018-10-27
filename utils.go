@@ -1,21 +1,29 @@
 package morse
 
-import "strings"
+import (
+	"strings"
+)
 
 //ToText converts a morse string to his textual rapresentation
 func ToText(morse string) string {
 	c := DefaultConverter
 
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
-	chars := strings.Split(morse, c.charSeparator)
 
-	for _, ch := range chars {
-		text, ok := c.morseToRune[ch]
-		if !ok {
-			out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
-			continue
+	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
+	for _, word := range words {
+		chars := strings.Split(word, c.charSeparator)
+
+		for _, ch := range chars {
+			text, ok := c.morseToRune[ch]
+			// fmt.Printf(": %q %q\n", ch, text)
+			if !ok {
+				out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
+				continue
+			}
+			out = append(out, text)
 		}
-		out = append(out, text)
+		out = append(out, ' ')
 	}
 
 	return string(out)
