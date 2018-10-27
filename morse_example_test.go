@@ -10,7 +10,10 @@ func Example() {
 	text := "MORSE IS AWESOME"
 	textInMorse := morse.ToMorse(text)
 	fmt.Println(textInMorse)
+	backToText := morse.ToText(textInMorse)
+	fmt.Println(backToText)
 	//Output: -- --- .-. ... .   .. ...   .- .-- . ... --- -- .
+	//MORSE IS AWESOME
 }
 func ExampleConvertRune() {
 	ch := 'G'

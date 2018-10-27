@@ -16,7 +16,6 @@ func ToText(morse string) string {
 
 		for _, ch := range chars {
 			text, ok := c.morseToRune[ch]
-			// fmt.Printf(": %q %q\n", ch, text)
 			if !ok {
 				out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
 				continue
@@ -24,6 +23,10 @@ func ToText(morse string) string {
 			out = append(out, text)
 		}
 		out = append(out, ' ')
+	}
+
+	if len(words) > 0 {
+		out = out[:len(out)-1]
 	}
 
 	return string(out)

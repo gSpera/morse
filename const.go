@@ -5,7 +5,7 @@ import "fmt"
 //ErrNoEncoding is the error used when there is no rapresentation
 type ErrNoEncoding struct{ Text string }
 
-func (e ErrNoEncoding) Error() string { return fmt.Sprintf("No encoding for: %s", e.Text) }
+func (e ErrNoEncoding) Error() string { return fmt.Sprintf("No encoding for: %q", e.Text) }
 
 const averageSize = 4.53 //Magic
 
