@@ -1,6 +1,7 @@
 package morse
 
 import (
+	"io"
 	"strings"
 )
 
@@ -19,15 +20,24 @@ type ErrorHandler func(error) string
 //MorseToText converts a morse string to his textual rapresentation
 func (c Converter) MorseToText(morse string) string {
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
-	chars := strings.Split(morse, c.charSeparator)
 
-	for _, ch := range chars {
-		text, ok := c.morseToRune[ch]
-		if !ok {
-			out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
-			continue
+	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
+	for _, word := range words {
+		chars := strings.Split(word, c.charSeparator)
+
+		for _, ch := range chars {
+			text, ok := c.morseToRune[ch]
+			if !ok {
+				out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
+				continue
+			}
+			out = append(out, text)
 		}
-		out = append(out, text)
+		out = append(out, ' ')
+	}
+
+	if len(words) > 0 {
+		out = out[:len(out)-1]
 	}
 
 	return string(out)
@@ -48,4 +58,14 @@ func (c Converter) TextToMorse(text string) string {
 	}
 
 	return string(out)
+}
+
+//ToMorseWriter translate all the text written to the returned io.Writer in morse code and writes it in the input io.Writer
+func (c Converter) ToMorseWriter(output io.Writer) io.Writer {
+	return translateToMorse{conv: c, buffer: make([]byte, 10), output: output}
+}
+
+//ToTextWriter translate all the text written to the returned io.Writer from morse code and writes it in the input io.Writer
+func (c Converter) ToTextWriter(output io.Writer) io.Writer {
+	return translateToText{conv: c, buffer: make([]byte, 10), output: output}
 }

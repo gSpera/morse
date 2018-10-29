@@ -1,6 +1,7 @@
 package morse_test
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/gSpera/morse"
@@ -148,4 +149,68 @@ func TestErrors(t *testing.T) {
 			t.Errorf("Expected: %q; got: %q", expected, out)
 		}
 	})
+}
+
+func TestConverter_ToMorseWriter(t *testing.T) {
+	tm := []struct {
+		name   string
+		input  string
+		output string
+	}{
+		{
+			"Letter",
+			"G",
+			"--.",
+		},
+		{
+			"Text",
+			"TEXT",
+			"- . -..- -",
+		},
+	}
+
+	buffer := bytes.NewBufferString("")
+	writer := morse.ToMorseWriter(buffer)
+	for _, tt := range tm {
+		t.Run(tt.name, func(t *testing.T) {
+			buffer.Reset()
+			writer.Write([]byte(tt.input))
+			output := buffer.String()
+			if output != tt.output {
+				t.Errorf("Expected: %q; got: %q", tt.output, output)
+			}
+		})
+	}
+}
+
+func TestConverter_ToTextWriter(t *testing.T) {
+	tm := []struct {
+		name   string
+		input  string
+		output string
+	}{
+		{
+			"Letter",
+			"--.",
+			"G",
+		},
+		{
+			"Text",
+			"- . -..- -",
+			"TEXT",
+		},
+	}
+
+	buffer := bytes.NewBufferString("")
+	writer := morse.ToTextWriter(buffer)
+	for _, tt := range tm {
+		t.Run(tt.name, func(t *testing.T) {
+			buffer.Reset()
+			writer.Write([]byte(tt.input))
+			output := buffer.String()
+			if output != tt.output {
+				t.Errorf("Expected: %q; got: %q", tt.output, output)
+			}
+		})
+	}
 }

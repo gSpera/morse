@@ -1,52 +1,45 @@
 package morse
 
 import (
-	"strings"
+	"io"
 )
 
 //ToText converts a morse string to his textual rapresentation
-func ToText(morse string) string {
-	c := DefaultConverter
-
-	out := make([]rune, 0, int(float64(len(morse))/averageSize))
-
-	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
-	for _, word := range words {
-		chars := strings.Split(word, c.charSeparator)
-
-		for _, ch := range chars {
-			text, ok := c.morseToRune[ch]
-			if !ok {
-				out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
-				continue
-			}
-			out = append(out, text)
-		}
-		out = append(out, ' ')
-	}
-
-	if len(words) > 0 {
-		out = out[:len(out)-1]
-	}
-
-	return string(out)
-}
+func ToText(morse string) string { return DefaultConverter.MorseToText(morse) }
 
 //ToMorse converts a text to his morse rapresentation
-func ToMorse(text string) string {
-	c := DefaultConverter
+func ToMorse(text string) string { return DefaultConverter.TextToMorse(text) }
 
-	out := make([]rune, 0, int(float64(len(text))*averageSize))
+//ToMorseWriter translate all the text written to the returned io.Writer in morse code and writes it in the input io.Writer
+func ToMorseWriter(output io.Writer) io.Writer { return DefaultConverter.ToMorseWriter(output) }
 
-	for _, ch := range text {
-		out = append(out, []rune(c.runeToMorse[ch])...)
-		out = append(out, []rune(c.charSeparator)...)
-	}
+//ToTextWriter translate all the text written to the returned io.Writer from morse code and writes it in the input io.Writer
+func ToTextWriter(output io.Writer) io.Writer { return DefaultConverter.ToTextWriter(output) }
 
-	//Remove last charSeparator
-	if len(text) > 0 {
-		out = out[:len(out)-len(c.charSeparator)]
-	}
+type translateToMorse struct {
+	conv   Converter
+	buffer []byte
 
-	return string(out)
+	input  io.Reader
+	output io.Writer
+}
+
+//Text -> Morse
+func (t translateToMorse) Write(data []byte) (int, error) {
+	morse := t.conv.TextToMorse(string(data))
+	return t.output.Write([]byte(morse))
+}
+
+type translateToText struct {
+	conv   Converter
+	buffer []byte
+
+	input  io.Reader
+	output io.Writer
+}
+
+//Morse -> Text
+func (t translateToText) Write(data []byte) (int, error) {
+	morse := t.conv.MorseToText(string(data))
+	return t.output.Write([]byte(morse))
 }
