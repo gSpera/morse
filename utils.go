@@ -4,11 +4,11 @@ import (
 	"io"
 )
 
-//ToText converts a morse string to his textual rapresentation
-func ToText(morse string) string { return DefaultConverter.MorseToText(morse) }
+//ToText converts a morse string to his textual rapresentation, it is an alias to DefaultConverter.ToText
+func ToText(morse string) string { return DefaultConverter.ToText(morse) }
 
-//ToMorse converts a text to his morse rapresentation
-func ToMorse(text string) string { return DefaultConverter.TextToMorse(text) }
+//ToMorse converts a text to his morse rapresentation, it is an alias to DefaultConverter.ToMorse
+func ToMorse(text string) string { return DefaultConverter.ToMorse(text) }
 
 //ToMorseWriter translate all the text written to the returned io.Writer in morse code and writes it in the input io.Writer
 func ToMorseWriter(output io.Writer) io.Writer { return DefaultConverter.ToMorseWriter(output) }
@@ -26,7 +26,7 @@ type translateToMorse struct {
 
 //Text -> Morse
 func (t translateToMorse) Write(data []byte) (int, error) {
-	morse := t.conv.TextToMorse(string(data))
+	morse := t.conv.ToMorse(string(data))
 	return t.output.Write([]byte(morse))
 }
 
@@ -40,6 +40,6 @@ type translateToText struct {
 
 //Morse -> Text
 func (t translateToText) Write(data []byte) (int, error) {
-	morse := t.conv.MorseToText(string(data))
+	morse := t.conv.ToText(string(data))
 	return t.output.Write([]byte(morse))
 }

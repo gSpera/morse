@@ -28,7 +28,7 @@ func TestRuneToMorse(t *testing.T) {
 	}
 }
 
-func TestConverter_MorseToText(t *testing.T) {
+func TestConverter_ToText(t *testing.T) {
 	tm := []struct {
 		name      string
 		converter morse.Converter
@@ -51,7 +51,7 @@ func TestConverter_MorseToText(t *testing.T) {
 
 	for _, tt := range tm {
 		t.Run(tt.name, func(t *testing.T) {
-			get := tt.converter.MorseToText(tt.input)
+			get := tt.converter.ToText(tt.input)
 			if get != tt.output {
 				t.Errorf("Expected [%s], got: [%s]", tt.output, get)
 			}
@@ -59,7 +59,7 @@ func TestConverter_MorseToText(t *testing.T) {
 	}
 }
 
-func TestConverter_TextToMorse(t *testing.T) {
+func TestConverter_ToMorse(t *testing.T) {
 	tm := []struct {
 		name      string
 		converter morse.Converter
@@ -82,7 +82,7 @@ func TestConverter_TextToMorse(t *testing.T) {
 
 	for _, tt := range tm {
 		t.Run(tt.name, func(t *testing.T) {
-			get := tt.converter.TextToMorse(tt.input)
+			get := tt.converter.ToMorse(tt.input)
 			if get != tt.output {
 				t.Errorf("Expected [%s], got: [%s]", tt.output, get)
 			}
@@ -122,7 +122,7 @@ func TestHandler(t *testing.T) {
 	t.Run("IgnoreHandler", func(t *testing.T) {
 		conv := morse.DefaultConverter
 		conv.Handling = morse.IgnoreHandler
-		out := conv.MorseToText("--------")
+		out := conv.ToText("--------")
 		if out != "" {
 			t.Errorf("Expected \"\", got: %q", out)
 		}
@@ -136,7 +136,7 @@ func TestHandler(t *testing.T) {
 
 		conv := morse.DefaultConverter
 		conv.Handling = morse.PanicHandler
-		conv.MorseToText("-------")
+		conv.ToText("-------")
 	})
 }
 

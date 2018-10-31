@@ -17,8 +17,8 @@ type Converter struct {
 //ErrorHandler is a function used by Converter when it encounter an unknown character
 type ErrorHandler func(error) string
 
-//MorseToText converts a morse string to his textual rapresentation
-func (c Converter) MorseToText(morse string) string {
+//ToText converts a morse string to his textual rapresentation
+func (c Converter) ToText(morse string) string {
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
 
 	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
@@ -43,8 +43,8 @@ func (c Converter) MorseToText(morse string) string {
 	return string(out)
 }
 
-//TextToMorse converts a text to his morse rapresentation
-func (c Converter) TextToMorse(text string) string {
+//ToMorse converts a text to his morse rapresentation
+func (c Converter) ToMorse(text string) string {
 	out := make([]rune, 0, int(float64(len(text))*averageSize))
 
 	for _, ch := range text {
