@@ -5,6 +5,9 @@ import (
 	"strings"
 )
 
+//ErrorHandler is a function used by Converter when it encounter an unknown character
+type ErrorHandler func(error) string
+
 //Converter is a Morse from/to Text converter, it handles the conversion and error handling
 type Converter struct {
 	runeToMorse   map[rune]string
@@ -14,8 +17,25 @@ type Converter struct {
 	Handling ErrorHandler
 }
 
-//ErrorHandler is a function used by Converter when it encounter an unknown character
-type ErrorHandler func(error) string
+//NewConverter creates a new converter with the specified configuration
+//convertingMap is an EncodingMap, it contains how the characters will be translated, usually this is set to DefaultMorse
+//but a custom one can be used. A nil convertingMap will panic.
+//charSeparator is the string used to separate characters
+//The default Handler is the IgnoreHandler, it can be changed later.
+func NewConverter(convertingMap EncodingMap, charSeparator string) Converter {
+	if convertingMap == nil {
+		panic("Using a nil EncodingMap")
+	}
+
+	morseToRune := reverseEncodingMap(convertingMap)
+
+	return Converter{
+		runeToMorse:   convertingMap,
+		morseToRune:   morseToRune,
+		charSeparator: charSeparator,
+		Handling:      IgnoreHandler,
+	}
+}
 
 //ToText converts a morse string to his textual rapresentation
 func (c Converter) ToText(morse string) string {
@@ -68,4 +88,18 @@ func (c Converter) ToMorseWriter(output io.Writer) io.Writer {
 //ToTextWriter translate all the text written to the returned io.Writer from morse code and writes it in the input io.Writer
 func (c Converter) ToTextWriter(output io.Writer) io.Writer {
 	return translateToText{conv: c, buffer: make([]byte, 10), output: output}
+}
+
+//CharSeparator returns the charSeparator of the converter
+func (c Converter) CharSeparator() string { return c.charSeparator }
+
+//EncodingMap returns a copy of the EncodingMap inside the Converter, modifing the returned map will not change the internal one
+func (c Converter) EncodingMap() EncodingMap {
+	ret := make(EncodingMap, len(c.runeToMorse))
+
+	for k, v := range c.runeToMorse {
+		ret[k] = v
+	}
+
+	return ret
 }

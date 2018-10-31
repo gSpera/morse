@@ -43,3 +43,13 @@ func (t translateToText) Write(data []byte) (int, error) {
 	morse := t.conv.ToText(string(data))
 	return t.output.Write([]byte(morse))
 }
+
+func reverseEncodingMap(encoding EncodingMap) map[string]rune {
+	ret := make(map[string]rune, len(encoding))
+
+	for k, v := range encoding {
+		ret[v] = k
+	}
+
+	return ret
+}

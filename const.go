@@ -7,6 +7,9 @@ type ErrNoEncoding struct{ Text string }
 
 func (e ErrNoEncoding) Error() string { return fmt.Sprintf("No encoding for: %q", e.Text) }
 
+//EncodingMap contains the definitions for converting between two encoding
+type EncodingMap map[rune]string
+
 const averageSize = 4.53 //Magic
 
 //Morse letters definitions
@@ -41,7 +44,9 @@ const (
 	Space = " "
 )
 
-var runeMap = map[rune]string{
+//DefaultMorse is the default map used to convert between morse and text
+//This map may remain constant.
+var DefaultMorse = EncodingMap{
 	'A': A,
 	'B': B,
 	'C': C,
@@ -71,35 +76,7 @@ var runeMap = map[rune]string{
 	' ': Space,
 }
 
-var stringMap = map[string]rune{
-	A:     'A',
-	B:     'B',
-	C:     'C',
-	D:     'D',
-	E:     'E',
-	F:     'F',
-	G:     'G',
-	H:     'H',
-	I:     'I',
-	J:     'J',
-	K:     'K',
-	L:     'L',
-	M:     'M',
-	N:     'N',
-	O:     'O',
-	P:     'P',
-	Q:     'Q',
-	R:     'R',
-	S:     'S',
-	T:     'T',
-	U:     'U',
-	V:     'V',
-	W:     'W',
-	X:     'X',
-	Y:     'Y',
-	Z:     'Z',
-	Space: ' ',
-}
+var reverseDefaultMorse = reverseEncodingMap(DefaultMorse)
 
 //IgnoreHandler ignores the error and returns nothing
 func IgnoreHandler(error) string { return "" }
@@ -108,10 +85,4 @@ func IgnoreHandler(error) string { return "" }
 func PanicHandler(err error) string { panic(err) }
 
 //DefaultConverter is the default converter, it uses the exported morse set and has an IgnoreHandler, the separation character is a space
-var DefaultConverter = Converter{
-	charSeparator: " ",
-	morseToRune:   stringMap,
-	runeToMorse:   runeMap,
-
-	Handling: IgnoreHandler,
-}
+var DefaultConverter = NewConverter(DefaultMorse, " ")

@@ -17,14 +17,14 @@ func Example() {
 }
 func ExampleConvertRune() {
 	ch := 'G'
-	str := morse.ConvertRune(ch)
+	str := morse.RuneToMorse(ch)
 
 	fmt.Printf("The letter %c converts to: %s", ch, str)
 	//Output: The letter G converts to: --.
 }
 func ExampleConvertMorseToRune() {
 	str := "--."
-	ch := morse.ConvertMorseToRune(str)
+	ch := morse.RuneToText(str)
 
 	fmt.Printf("The morse code %s converts to: %c", str, ch)
 	//Output: The morse code --. converts to: G

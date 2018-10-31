@@ -20,7 +20,7 @@ func TestRuneToMorse(t *testing.T) {
 
 	for _, tt := range tm {
 		t.Run(tt.name, func(t *testing.T) {
-			get := morse.ConvertRune(tt.input)
+			get := morse.RuneToMorse(tt.input)
 			if get != tt.output {
 				t.Errorf("Expected [%s], got: [%s]", tt.output, get)
 			}
@@ -213,4 +213,39 @@ func TestConverter_ToTextWriter(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestConverter_CharSeparator(t *testing.T) {
+	separator := "separator"
+	c := morse.NewConverter(morse.DefaultMorse, separator)
+	out := c.CharSeparator()
+
+	if out != separator {
+		t.Errorf("Expected: %q; got: %q", separator, out)
+	}
+}
+
+func TestConverter_EncodingMap(t *testing.T) {
+	expectedMap := morse.DefaultMorse
+
+	c := morse.NewConverter(expectedMap, " ")
+	out := c.EncodingMap()
+
+	for k := range expectedMap {
+		if expectedMap[k] != out[k] {
+			t.Errorf("Checking: %q: Expected: %q; got: %q", k, expectedMap[k], out[k])
+		}
+	}
+}
+
+func Test_NewConverter(t *testing.T) {
+	t.Run("nil map", func(t *testing.T) {
+		defer func() {
+			err := recover()
+			if err == nil {
+				t.Error("Expected")
+			}
+		}()
+		morse.NewConverter(nil, "")
+	})
 }

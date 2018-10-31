@@ -1,13 +1,13 @@
 package morse
 
-//ConvertRune return the morse rapresentation of the rune
-//If the rune is not a recognized morse character ConvertRune will return an empty string
-func ConvertRune(ch rune) string {
-	return runeMap[ch]
+//RuneToMorse return the morse rapresentation of the rune
+//If the rune is not a recognized morse character RuneToMorse will return an empty string
+func RuneToMorse(ch rune) string {
+	return DefaultMorse[ch]
 }
 
-//ConvertMorseToRune return the character rapresented by the input string
-//If the string is not recognizedc as a morse sequenze ConvertMorseToRune will return a null rune
-func ConvertMorseToRune(char string) rune {
-	return stringMap[char]
+//RuneToText return the character rapresented by the input string
+//If the string is not recognizedc as a morse sequenze RuneToText will return a null rune
+func RuneToText(char string) rune {
+	return reverseDefaultMorse[char]
 }
