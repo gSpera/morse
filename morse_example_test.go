@@ -8,21 +8,25 @@ import (
 
 func Example() {
 	text := "MORSE IS AWESOME"
+
+	//Convert to morse
 	textInMorse := morse.ToMorse(text)
 	fmt.Println(textInMorse)
+
+	//Back to text
 	backToText := morse.ToText(textInMorse)
 	fmt.Println(backToText)
 	//Output: -- --- .-. ... .   .. ...   .- .-- . ... --- -- .
 	//MORSE IS AWESOME
 }
-func ExampleConvertRune() {
+func ExampleRuneToMorse() {
 	ch := 'G'
 	str := morse.RuneToMorse(ch)
 
 	fmt.Printf("The letter %c converts to: %s", ch, str)
 	//Output: The letter G converts to: --.
 }
-func ExampleConvertMorseToRune() {
+func ExampleRuneToText() {
 	str := "--."
 	ch := morse.RuneToText(str)
 
