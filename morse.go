@@ -24,21 +24,27 @@ type Converter struct {
 //but a custom one can be used. A nil convertingMap will panic.
 //charSeparator is the string used to separate characters
 //The default Handler is the IgnoreHandler, it can be changed later.
-func NewConverter(convertingMap EncodingMap, charSeparator string) Converter {
+func NewConverter(convertingMap EncodingMap, charSeparator string, options ...ConverterOption) Converter {
 	if convertingMap == nil {
 		panic("Using a nil EncodingMap")
 	}
 
 	morseToRune := reverseEncodingMap(convertingMap)
 
-	return Converter{
+	c := Converter{
 		runeToMorse:    convertingMap,
 		morseToRune:    morseToRune,
 		charSeparator:  charSeparator,
-		convertToUpper: true,
+		convertToUpper: false,
 
 		Handling: IgnoreHandler,
 	}
+
+	for _, opt := range options {
+		c = opt(c)
+	}
+
+	return c
 }
 
 //ToText converts a morse string to his textual rapresentation
