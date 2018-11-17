@@ -1,8 +1,14 @@
 package morse
 
+import (
+	"unicode"
+)
+
 //RuneToMorse return the morse rapresentation of the rune
 //If the rune is not a recognized morse character RuneToMorse will return an empty string
+//Lowercase runes are converted to uppercase
 func RuneToMorse(ch rune) string {
+	ch = unicode.ToUpper(ch)
 	return DefaultMorse[ch]
 }
 

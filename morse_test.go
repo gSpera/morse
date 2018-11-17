@@ -16,6 +16,7 @@ func TestRuneToMorse(t *testing.T) {
 		{"Simple A", 'A', morse.A},
 		{"Hardcoded A", 'A', ".-"},
 		{"Non supported rune", '-', ""},
+		{"Lowercase", 'a', ".-"},
 	}
 
 	for _, tt := range tm {

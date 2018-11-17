@@ -3,6 +3,7 @@ package morse
 import (
 	"io"
 	"strings"
+	"unicode"
 )
 
 //ErrorHandler is a function used by Converter when it encounter an unknown character
@@ -10,9 +11,10 @@ type ErrorHandler func(error) string
 
 //Converter is a Morse from/to Text converter, it handles the conversion and error handling
 type Converter struct {
-	runeToMorse   map[rune]string
-	morseToRune   map[string]rune
-	charSeparator string
+	runeToMorse    map[rune]string
+	morseToRune    map[string]rune
+	charSeparator  string
+	convertToUpper bool
 
 	Handling ErrorHandler
 }
@@ -30,10 +32,12 @@ func NewConverter(convertingMap EncodingMap, charSeparator string) Converter {
 	morseToRune := reverseEncodingMap(convertingMap)
 
 	return Converter{
-		runeToMorse:   convertingMap,
-		morseToRune:   morseToRune,
-		charSeparator: charSeparator,
-		Handling:      IgnoreHandler,
+		runeToMorse:    convertingMap,
+		morseToRune:    morseToRune,
+		charSeparator:  charSeparator,
+		convertToUpper: true,
+
+		Handling: IgnoreHandler,
 	}
 }
 
@@ -68,6 +72,10 @@ func (c Converter) ToMorse(text string) string {
 	out := make([]rune, 0, int(float64(len(text))*averageSize))
 
 	for _, ch := range text {
+		if c.convertToUpper {
+			ch = unicode.ToUpper(ch)
+		}
+
 		out = append(out, []rune(c.runeToMorse[ch])...)
 		out = append(out, []rune(c.charSeparator)...)
 	}
@@ -93,7 +101,8 @@ func (c Converter) ToTextWriter(output io.Writer) io.Writer {
 //CharSeparator returns the charSeparator of the converter
 func (c Converter) CharSeparator() string { return c.charSeparator }
 
-//EncodingMap returns a copy of the EncodingMap inside the Converter, modifing the returned map will not change the internal one
+//EncodingMap returns a copy of the EncodingMap inside the Converter,
+//modifing the returned map will not change the internal one
 func (c Converter) EncodingMap() EncodingMap {
 	ret := make(EncodingMap, len(c.runeToMorse))
 
