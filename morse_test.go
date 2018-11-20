@@ -50,7 +50,7 @@ func TestConverter_ToText(t *testing.T) {
 		},
 		{
 			"Trailing Separator with Handler",
-			morse.NewConverter(morse.DefaultMorse, " ",
+			morse.NewConverter(morse.DefaultMorse,
 				morse.WithHandler(func(error) string { return "A" }),
 				morse.WithTrailingSeparator(true),
 			),
@@ -93,21 +93,21 @@ func TestConverter_ToMorse(t *testing.T) {
 		},
 		{
 			"Character not supported",
-			morse.NewConverter(morse.EncodingMap{}, " ", morse.WithHandler(morse.PanicHandler)),
+			morse.NewConverter(morse.EncodingMap{}, morse.WithHandler(morse.PanicHandler)),
 			"A",
 			"",
 			morse.ErrNoEncoding{Text: "A"},
 		},
 		{
 			"Character not supported - Ignore",
-			morse.NewConverter(morse.EncodingMap{}, " ", morse.WithHandler(morse.IgnoreHandler)),
+			morse.NewConverter(morse.EncodingMap{}, morse.WithHandler(morse.IgnoreHandler)),
 			"A",
 			"",
 			nil,
 		},
 		{
 			"Trailing Separator with Handler",
-			morse.NewConverter(morse.EncodingMap{}, " ",
+			morse.NewConverter(morse.EncodingMap{},
 				morse.WithHandler(func(error) string { return "A" }),
 				morse.WithTrailingSeparator(true),
 			),
@@ -278,7 +278,8 @@ func TestConverter_ToTextWriter(t *testing.T) {
 
 func TestConverter_CharSeparator(t *testing.T) {
 	separator := "separator"
-	c := morse.NewConverter(morse.DefaultMorse, separator,
+	c := morse.NewConverter(morse.DefaultMorse,
+		morse.WithCharSeparator(separator),
 		morse.WithHandler(morse.PanicHandler),
 	)
 	out := c.CharSeparator()
@@ -291,7 +292,7 @@ func TestConverter_CharSeparator(t *testing.T) {
 func TestConverter_EncodingMap(t *testing.T) {
 	expectedMap := morse.DefaultMorse
 
-	c := morse.NewConverter(expectedMap, " ",
+	c := morse.NewConverter(expectedMap,
 		morse.WithHandler(morse.PanicHandler),
 	)
 	out := c.EncodingMap()
@@ -311,6 +312,6 @@ func Test_NewConverter(t *testing.T) {
 				t.Error("Expected")
 			}
 		}()
-		morse.NewConverter(nil, "")
+		morse.NewConverter(nil)
 	})
 }

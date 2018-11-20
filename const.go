@@ -87,8 +87,10 @@ func PanicHandler(err error) string { panic(err) }
 //DefaultConverter is the default converter, it uses the exported morse set and has an IgnoreHandler, the separation character is a space
 //Lowercase letter are encoded as upper ones. DefaultConverter uses explicitly IgnoreHandler and adds the trailoing separator
 var DefaultConverter = NewConverter(
-	DefaultMorse, " ",
+	DefaultMorse,
 
+	WithCharSeparator(" "),
+	WithWordSeparator(" "),
 	WithLowercaseHandling(true),
 	WithHandler(IgnoreHandler),
 	WithTrailingSeparator(false),

@@ -14,6 +14,7 @@ type Converter struct {
 	runeToMorse       map[rune]string
 	morseToRune       map[string]rune
 	charSeparator     string
+	wordSeparator     string
 	convertToUpper    bool
 	trailingSeparator bool
 
@@ -25,7 +26,7 @@ type Converter struct {
 //but a custom one can be used. A nil convertingMap will panic.
 //charSeparator is the string used to separate characters
 //The default Handler is the IgnoreHandler, it can be changed later.
-func NewConverter(convertingMap EncodingMap, charSeparator string, options ...ConverterOption) Converter {
+func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Converter {
 	if convertingMap == nil {
 		panic("Using a nil EncodingMap")
 	}
@@ -35,7 +36,8 @@ func NewConverter(convertingMap EncodingMap, charSeparator string, options ...Co
 	c := Converter{
 		runeToMorse:       convertingMap,
 		morseToRune:       morseToRune,
-		charSeparator:     charSeparator,
+		charSeparator:     " ",
+		wordSeparator:     " ",
 		convertToUpper:    false,
 		trailingSeparator: false,
 

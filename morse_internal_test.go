@@ -16,6 +16,8 @@ func TestConverterOption(t *testing.T) {
 		{"No Functions", DefaultConverter, []ConverterOption{}, DefaultConverter},
 		{"WithLowercaseHandling", Converter{}, []ConverterOption{WithLowercaseHandling(true)}, Converter{convertToUpper: true}},
 		{"WithHandler", Converter{}, []ConverterOption{WithHandler(IgnoreHandler)}, Converter{Handling: IgnoreHandler}},
+		{"WithCharSeparator", Converter{}, []ConverterOption{WithCharSeparator("separator")}, Converter{charSeparator: "separator"}},
+		{"WithWordSeparator", Converter{}, []ConverterOption{WithWordSeparator("separator")}, Converter{wordSeparator: "separator"}},
 	}
 
 	for _, tt := range tm {

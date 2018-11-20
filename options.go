@@ -27,3 +27,19 @@ func WithTrailingSeparator(trailingSpace bool) ConverterOption {
 		return c
 	}
 }
+
+//WithCharSeparator sets the Character Separator
+func WithCharSeparator(charSeparator string) ConverterOption {
+	return func(c Converter) Converter {
+		c.charSeparator = charSeparator
+		return c
+	}
+}
+
+//WithWordSeparator sets the Word Separator
+func WithWordSeparator(wordSeparator string) ConverterOption {
+	return func(c Converter) Converter {
+		c.wordSeparator = wordSeparator
+		return c
+	}
+}
