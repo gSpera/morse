@@ -33,10 +33,11 @@ func NewConverter(convertingMap EncodingMap, charSeparator string, options ...Co
 	morseToRune := reverseEncodingMap(convertingMap)
 
 	c := Converter{
-		runeToMorse:    convertingMap,
-		morseToRune:    morseToRune,
-		charSeparator:  charSeparator,
-		convertToUpper: false,
+		runeToMorse:       convertingMap,
+		morseToRune:       morseToRune,
+		charSeparator:     charSeparator,
+		convertToUpper:    false,
+		trailingSeparator: false,
 
 		Handling: IgnoreHandler,
 	}
@@ -60,7 +61,13 @@ func (c Converter) ToText(morse string) string {
 		for _, ch := range chars {
 			text, ok := c.morseToRune[ch]
 			if !ok {
-				out = append(out, []rune(c.Handling(ErrNoEncoding{string(ch)}))...)
+				hand := []rune(c.Handling(ErrNoEncoding{string(ch)}))
+				out = append(out, hand...)
+
+				//Add a charSeparator is the len of the result is not zero
+				if len(hand) != 0 {
+					out = append(out, []rune(c.charSeparator)...)
+				}
 				continue
 			}
 			out = append(out, text)
@@ -69,9 +76,9 @@ func (c Converter) ToText(morse string) string {
 		out = append(out, ' ')
 	}
 
-	//Remove trailing whitespace
-	if !c.trailingSeparator && len(words) > 0 {
-		out = out[:len(out)-1]
+	//Remove last charSeparator
+	if !c.trailingSeparator && len(out) >= len(c.charSeparator) {
+		out = out[:len(out)-len(c.charSeparator)]
 	}
 
 	return string(out)
@@ -89,6 +96,8 @@ func (c Converter) ToMorse(text string) string {
 		if _, ok := c.runeToMorse[ch]; !ok {
 			hand := []rune(c.Handling(ErrNoEncoding{string(ch)}))
 			out = append(out, hand...)
+
+			//Add a charSeparator is the len of the result is not zero
 			if len(hand) != 0 {
 				out = append(out, []rune(c.charSeparator)...)
 			}
@@ -100,7 +109,7 @@ func (c Converter) ToMorse(text string) string {
 	}
 
 	//Remove last charSeparator
-	if !c.trailingSeparator && len(text) > 0 {
+	if !c.trailingSeparator && len(out) >= len(c.charSeparator) {
 		out = out[:len(out)-len(c.charSeparator)]
 	}
 

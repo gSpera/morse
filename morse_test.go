@@ -48,6 +48,15 @@ func TestConverter_ToText(t *testing.T) {
 			"",
 			"",
 		},
+		{
+			"Trailing Separator with Handler",
+			morse.NewConverter(morse.DefaultMorse, " ",
+				morse.WithHandler(func(error) string { return "A" }),
+				morse.WithTrailingSeparator(true),
+			),
+			"",
+			"A  ",
+		},
 	}
 
 	for _, tt := range tm {
@@ -66,23 +75,61 @@ func TestConverter_ToMorse(t *testing.T) {
 		converter morse.Converter
 		input     string
 		output    string
+		panics    interface{}
 	}{
 		{
 			"Simple Text",
 			morse.DefaultConverter,
 			"LOREM",
 			".-.. --- .-. . --",
+			nil,
 		},
 		{
 			"Empty String",
 			morse.DefaultConverter,
 			"",
 			"",
+			nil,
+		},
+		{
+			"Character not supported",
+			morse.NewConverter(morse.EncodingMap{}, " ", morse.WithHandler(morse.PanicHandler)),
+			"A",
+			"",
+			morse.ErrNoEncoding{Text: "A"},
+		},
+		{
+			"Character not supported - Ignore",
+			morse.NewConverter(morse.EncodingMap{}, " ", morse.WithHandler(morse.IgnoreHandler)),
+			"A",
+			"",
+			nil,
+		},
+		{
+			"Trailing Separator with Handler",
+			morse.NewConverter(morse.EncodingMap{}, " ",
+				morse.WithHandler(func(error) string { return "A" }),
+				morse.WithTrailingSeparator(true),
+			),
+
+			" ",
+			"A ",
+			nil,
 		},
 	}
 
 	for _, tt := range tm {
 		t.Run(tt.name, func(t *testing.T) {
+			defer func() {
+				err := recover()
+				if tt.panics != err {
+					t.Errorf("Expected panic: %v; got: %v", tt.panics, err)
+					if err != nil {
+						panic(err)
+					}
+				}
+			}()
+
 			get := tt.converter.ToMorse(tt.input)
 			if get != tt.output {
 				t.Errorf("Expected [%s], got: [%s]", tt.output, get)
