@@ -19,3 +19,11 @@ func WithLowercaseHandling(lowercaseHandling bool) ConverterOption {
 		return c
 	}
 }
+
+//WithTrailingSeparator sets if the Converter may trail the charSeparator
+func WithTrailingSeparator(trailingSpace bool) ConverterOption {
+	return func(c Converter) Converter {
+		c.trailingSeparator = trailingSpace
+		return c
+	}
+}

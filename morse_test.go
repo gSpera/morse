@@ -189,16 +189,22 @@ func TestConverter_ToTextWriter(t *testing.T) {
 		name   string
 		input  string
 		output string
+		err    error
+		n      int
 	}{
 		{
 			"Letter",
 			"--.",
 			"G",
+			nil,
+			3,
 		},
 		{
 			"Text",
 			"- . -..- -",
 			"TEXT",
+			nil,
+			10,
 		},
 	}
 
@@ -207,7 +213,14 @@ func TestConverter_ToTextWriter(t *testing.T) {
 	for _, tt := range tm {
 		t.Run(tt.name, func(t *testing.T) {
 			buffer.Reset()
-			writer.Write([]byte(tt.input))
+			n, err := writer.Write([]byte(tt.input))
+			if tt.err != err {
+				t.Errorf("Expected error: %v; got: %v", tt.err, err)
+			}
+			if tt.n != n {
+				t.Errorf("Expected n: %v; got: %v", tt.n, n)
+			}
+
 			output := buffer.String()
 			if output != tt.output {
 				t.Errorf("Expected: %q; got: %q", tt.output, output)
@@ -218,7 +231,9 @@ func TestConverter_ToTextWriter(t *testing.T) {
 
 func TestConverter_CharSeparator(t *testing.T) {
 	separator := "separator"
-	c := morse.NewConverter(morse.DefaultMorse, separator)
+	c := morse.NewConverter(morse.DefaultMorse, separator,
+		morse.WithHandler(morse.PanicHandler),
+	)
 	out := c.CharSeparator()
 
 	if out != separator {
@@ -229,7 +244,9 @@ func TestConverter_CharSeparator(t *testing.T) {
 func TestConverter_EncodingMap(t *testing.T) {
 	expectedMap := morse.DefaultMorse
 
-	c := morse.NewConverter(expectedMap, " ")
+	c := morse.NewConverter(expectedMap, " ",
+		morse.WithHandler(morse.PanicHandler),
+	)
 	out := c.EncodingMap()
 
 	for k := range expectedMap {

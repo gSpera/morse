@@ -27,7 +27,8 @@ type translateToMorse struct {
 //Text -> Morse
 func (t translateToMorse) Write(data []byte) (int, error) {
 	morse := t.conv.ToMorse(string(data))
-	return t.output.Write([]byte(morse))
+	_, err := t.output.Write([]byte(morse))
+	return len(data), err
 }
 
 type translateToText struct {
@@ -41,7 +42,8 @@ type translateToText struct {
 //Morse -> Text
 func (t translateToText) Write(data []byte) (int, error) {
 	morse := t.conv.ToText(string(data))
-	return t.output.Write([]byte(morse))
+	_, err := t.output.Write([]byte(morse))
+	return len(data), err
 }
 
 func reverseEncodingMap(encoding EncodingMap) map[string]rune {

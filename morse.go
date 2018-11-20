@@ -11,10 +11,11 @@ type ErrorHandler func(error) string
 
 //Converter is a Morse from/to Text converter, it handles the conversion and error handling
 type Converter struct {
-	runeToMorse    map[rune]string
-	morseToRune    map[string]rune
-	charSeparator  string
-	convertToUpper bool
+	runeToMorse       map[rune]string
+	morseToRune       map[string]rune
+	charSeparator     string
+	convertToUpper    bool
+	trailingSeparator bool
 
 	Handling ErrorHandler
 }
@@ -51,22 +52,25 @@ func NewConverter(convertingMap EncodingMap, charSeparator string, options ...Co
 func (c Converter) ToText(morse string) string {
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
 
-	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
+	wordSeparator := c.charSeparator + Space + c.charSeparator
+	words := strings.Split(morse, wordSeparator)
 	for _, word := range words {
 		chars := strings.Split(word, c.charSeparator)
 
 		for _, ch := range chars {
 			text, ok := c.morseToRune[ch]
 			if !ok {
-				out = append(out, []rune(c.Handling(ErrNoEncoding{string(text)}))...)
+				out = append(out, []rune(c.Handling(ErrNoEncoding{string(ch)}))...)
 				continue
 			}
 			out = append(out, text)
 		}
+
 		out = append(out, ' ')
 	}
 
-	if len(words) > 0 {
+	//Remove trailing whitespace
+	if !c.trailingSeparator && len(words) > 0 {
 		out = out[:len(out)-1]
 	}
 
@@ -82,12 +86,21 @@ func (c Converter) ToMorse(text string) string {
 			ch = unicode.ToUpper(ch)
 		}
 
+		if _, ok := c.runeToMorse[ch]; !ok {
+			hand := []rune(c.Handling(ErrNoEncoding{string(ch)}))
+			out = append(out, hand...)
+			if len(hand) != 0 {
+				out = append(out, []rune(c.charSeparator)...)
+			}
+			continue
+		}
+
 		out = append(out, []rune(c.runeToMorse[ch])...)
 		out = append(out, []rune(c.charSeparator)...)
 	}
 
 	//Remove last charSeparator
-	if len(text) > 0 {
+	if !c.trailingSeparator && len(text) > 0 {
 		out = out[:len(out)-len(c.charSeparator)]
 	}
 
