@@ -90,7 +90,7 @@ var DefaultConverter = NewConverter(
 	DefaultMorse,
 
 	WithCharSeparator(" "),
-	WithWordSeparator(" "),
+	WithWordSeparator("   "),
 	WithLowercaseHandling(true),
 	WithHandler(IgnoreHandler),
 	WithTrailingSeparator(false),

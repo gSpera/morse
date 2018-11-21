@@ -37,7 +37,7 @@ func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Convert
 		runeToMorse:       convertingMap,
 		morseToRune:       morseToRune,
 		charSeparator:     " ",
-		wordSeparator:     " ",
+		wordSeparator:     "",
 		convertToUpper:    false,
 		trailingSeparator: false,
 
@@ -48,6 +48,18 @@ func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Convert
 		c = opt(c)
 	}
 
+	//Set wordSeparator as default
+	if c.wordSeparator == "" {
+
+		//Use custom space if avaible
+		sp, ok := c.runeToMorse[' ']
+		if !ok {
+			//Fallback to the default Space
+			sp = Space
+		}
+		c.wordSeparator = c.charSeparator + sp + c.charSeparator
+	}
+
 	return c
 }
 
@@ -55,8 +67,7 @@ func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Convert
 func (c Converter) ToText(morse string) string {
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
 
-	wordSeparator := c.charSeparator + Space + c.charSeparator
-	words := strings.Split(morse, wordSeparator)
+	words := strings.Split(morse, c.charSeparator+Space+c.charSeparator)
 	for _, word := range words {
 		chars := strings.Split(word, c.charSeparator)
 
