@@ -12,39 +12,73 @@ type EncodingMap map[rune]string
 
 const averageSize = 4.53 //Magic
 
-//Morse letters definitions
+//Morse letters and figures definitions
 const (
-	A = ".-"
-	B = "-..."
-	C = "-.-."
-	D = "-.."
-	E = "."
-	F = "..-."
-	G = "--."
-	H = "...."
-	I = ".."
-	J = ".---"
-	K = "-.-"
-	L = ".-.."
-	M = "--"
-	N = "-."
-	O = "---"
-	P = ".--."
-	Q = "--.-"
-	R = ".-."
-	S = "..."
-	T = "-"
-	U = "..-"
-	V = "...-"
-	W = ".--"
-	X = "-..-"
-	Y = "-.--"
-	Z = "--.."
+	A         = ".-"
+	B         = "-..."
+	C         = "-.-."
+	D         = "-.."
+	E         = "."
+	AccentedE = "..-.."
+	F         = "..-."
+	G         = "--."
+	H         = "...."
+	I         = ".."
+	J         = ".---"
+	K         = "-.-"
+	L         = ".-.."
+	M         = "--"
+	N         = "-."
+	O         = "---"
+	P         = ".--."
+	Q         = "--.-"
+	R         = ".-."
+	S         = "..."
+	T         = "-"
+	U         = "..-"
+	V         = "...-"
+	W         = ".--"
+	X         = "-..-"
+	Y         = "-.--"
+	Z         = "--.."
+
+	One   = ".----"
+	Two   = "..---"
+	Three = "...--"
+	Four  = "....-"
+	Five  = "....."
+	Six   = "-...."
+	Seven = "--..."
+	Eight = "---.."
+	Nine  = "----."
+	Zero  = "-----"
+
+	Period       = ".-.-.-" //.
+	Comma        = "--..--" //,
+	Colon        = "---..." //:
+	QuestionMark = "..--.." //?
+	Apostrophe   = ".----." //'
+	Hyphen       = "-....-" //-
+	Division     = "-..-."  ///
+	LeftBracket  = "-.--."  //(
+	RightBracket = "-.--.-" //)
+	IvertedComma = ".-..-." //“ ”
+	DoubleHyphen = "-...-"  //=
+	Cross        = ".-.-."  //+
+	CommercialAt = ".--.-." //@
+
+	Understood           = "...-."
+	Error                = "........"
+	InvitationToTransmit = "-.-"
+	Wait                 = ".-..."
+	EndOfWork            = "...-.-"
+	StartingSignal       = "-.-.-"
 
 	Space = " "
 )
 
 //DefaultMorse is the default map used to convert between morse and text
+//The map contians all the standard codes defined as costants but doesn't include commands like Understood and Error
 //This map may remain constant.
 var DefaultMorse = EncodingMap{
 	'A': A,
@@ -73,7 +107,32 @@ var DefaultMorse = EncodingMap{
 	'X': X,
 	'Y': Y,
 	'Z': Z,
-	' ': Space,
+
+	'1': ".----",
+	'2': "..---",
+	'3': "...--",
+	'4': "....-",
+	'5': ".....",
+	'6': "-....",
+	'7': "--...",
+	'8': "---..",
+	'9': "----.",
+	'0': "-----",
+
+	'.':  ".-.-.-",
+	',':  "--..--",
+	':':  "---...",
+	'?':  "..--..",
+	'\'': ".----.",
+	'-':  "-....-",
+	'/':  "-..-.",
+	'(':  "-.--.",
+	')':  "-.--.-",
+	'“':  ".-..-.",
+	'=':  "-...-",
+	'+':  ".-.-.",
+	'@':  ".--.-.",
+	' ':  Space,
 }
 
 var reverseDefaultMorse = reverseEncodingMap(DefaultMorse)
