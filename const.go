@@ -3,13 +3,17 @@ package morse
 import "fmt"
 
 //ErrNoEncoding is the error used when there is no rapresentation
+//It's primary use is inside Handlers
 type ErrNoEncoding struct{ Text string }
 
+//Error implements the error interface
 func (e ErrNoEncoding) Error() string { return fmt.Sprintf("No encoding for: %q", e.Text) }
 
 //EncodingMap contains the definitions for converting between two encoding
+//It converts from a text rune (for example 'A') to it's morse rapresentation (for example ".-")
 type EncodingMap map[rune]string
 
+//averageSize is the average size of a morse char
 const averageSize = 4.53 //Magic
 
 //Morse letters and figures definitions

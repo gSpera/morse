@@ -7,6 +7,8 @@ import (
 )
 
 //ErrorHandler is a function used by Converter when it encounter an unknown character
+//Returns the text to inserted at the place of the unknown character
+//This may not(but can if necessary) corrupt the output inserting invalid morse character
 type ErrorHandler func(error) string
 
 //Converter is a Morse from/to Text converter, it handles the conversion and error handling
@@ -24,8 +26,6 @@ type Converter struct {
 //NewConverter creates a new converter with the specified configuration
 //convertingMap is an EncodingMap, it contains how the characters will be translated, usually this is set to DefaultMorse
 //but a custom one can be used. A nil convertingMap will panic.
-//charSeparator is the string used to separate characters
-//The default Handler is the IgnoreHandler, it can be changed later.
 func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Converter {
 	if convertingMap == nil {
 		panic("Using a nil EncodingMap")
@@ -64,6 +64,8 @@ func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Convert
 }
 
 //ToText converts a morse string to his textual rapresentation
+//
+//For Example: "- . ... -" -> "TEST"
 func (c Converter) ToText(morse string) string {
 	out := make([]rune, 0, int(float64(len(morse))/averageSize))
 
@@ -98,6 +100,9 @@ func (c Converter) ToText(morse string) string {
 }
 
 //ToMorse converts a text to his morse rapresentation
+//Lowercase characters are automatically converted to Uppercase
+//
+//For Example: "Test" -> "- . ... -"
 func (c Converter) ToMorse(text string) string {
 	out := make([]rune, 0, int(float64(len(text))*averageSize))
 
