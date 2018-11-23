@@ -6,8 +6,8 @@ import (
 	"unicode"
 )
 
-//ErrorHandler is a function used by Converter when it encounter an unknown character
-//Returns the text to inserted at the place of the unknown character
+//ErrorHandler is a function used by Converter when it encounters an unknown character
+//Returns the text to insert at the place of the unknown character
 //This may not(but can if necessary) corrupt the output inserting invalid morse character
 type ErrorHandler func(error) string
 
@@ -63,7 +63,7 @@ func NewConverter(convertingMap EncodingMap, options ...ConverterOption) Convert
 	return c
 }
 
-//ToText converts a morse string to his textual rapresentation
+//ToText converts a morse string to his textual representation
 //
 //For Example: "- . ... -" -> "TEST"
 func (c Converter) ToText(morse string) string {
@@ -99,7 +99,7 @@ func (c Converter) ToText(morse string) string {
 	return string(out)
 }
 
-//ToMorse converts a text to his morse rapresentation
+//ToMorse converts a text to his morse representation
 //Lowercase characters are automatically converted to Uppercase
 //
 //For Example: "Test" -> "- . ... -"
@@ -148,7 +148,7 @@ func (c Converter) ToTextWriter(output io.Writer) io.Writer {
 func (c Converter) CharSeparator() string { return c.charSeparator }
 
 //EncodingMap returns a copy of the EncodingMap inside the Converter,
-//modifing the returned map will not change the internal one
+//modifying the returned map will not change the internal one
 func (c Converter) EncodingMap() EncodingMap {
 	ret := make(EncodingMap, len(c.runeToMorse))
 

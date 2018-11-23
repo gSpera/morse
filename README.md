@@ -7,7 +7,7 @@ Morse is a simple library for encoding and decoding between morse and text.
 
 Support
 =======
-This library support the default morse (as defined by **ITU-R M.1677-1**) code but custom ones can be used freely using a custom [EncodingMap](https://godoc.org/github.com/gSpera/morse#EncodingMap)
+This library supports the default morse (as defined by **ITU-R M.1677-1**) code but custom ones can be used freely using a custom [EncodingMap](https://godoc.org/github.com/gSpera/morse#EncodingMap)
 
 Tool
 ====

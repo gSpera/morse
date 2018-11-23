@@ -4,7 +4,7 @@ import (
 	"unicode"
 )
 
-//RuneToMorse return the morse rapresentation of the rune
+//RuneToMorse return the morse representation of the rune
 //If the rune is not a recognized morse character RuneToMorse will return an empty string
 //Lowercase runes are converted to uppercase
 //
@@ -14,8 +14,8 @@ func RuneToMorse(ch rune) string {
 	return DefaultMorse[ch]
 }
 
-//RuneToText return the character rapresented by the input string
-//If the string is not recognizedc as a morse sequenze RuneToText will return a null rune
+//RuneToText return the character represented by the input string
+//If the string is not recognized as a morse sequence RuneToText will return a null rune
 //
 //For Example: "-" -> 'T'
 func RuneToText(char string) rune {

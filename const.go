@@ -2,15 +2,15 @@ package morse
 
 import "fmt"
 
-//ErrNoEncoding is the error used when there is no rapresentation
-//It's primary use is inside Handlers
+//ErrNoEncoding is the error used when there is no representation
+//Its primary use is inside Handlers
 type ErrNoEncoding struct{ Text string }
 
 //Error implements the error interface
 func (e ErrNoEncoding) Error() string { return fmt.Sprintf("No encoding for: %q", e.Text) }
 
 //EncodingMap contains the definitions for converting between two encoding
-//It converts from a text rune (for example 'A') to it's morse rapresentation (for example ".-")
+//It converts from a text rune (for example 'A') to its morse representation (for example ".-")
 type EncodingMap map[rune]string
 
 //averageSize is the average size of a morse char
@@ -144,11 +144,11 @@ var reverseDefaultMorse = reverseEncodingMap(DefaultMorse)
 //IgnoreHandler ignores the error and returns nothing
 func IgnoreHandler(error) string { return "" }
 
-//PanicHandler is an handler that panics when an error occuours
+//PanicHandler is a handler that panics when an error occurs
 func PanicHandler(err error) string { panic(err) }
 
 //DefaultConverter is the default converter, it uses the exported morse set and has an IgnoreHandler, the separation character is a space
-//Lowercase letter are encoded as upper ones. DefaultConverter uses explicitly IgnoreHandler and adds the trailoing separator
+//Lowercase letter are encoded as upper ones. DefaultConverter uses explicitly IgnoreHandler and adds the trailing separator
 var DefaultConverter = NewConverter(
 	DefaultMorse,
 

@@ -29,7 +29,7 @@ func WithTrailingSeparator(trailingSpace bool) ConverterOption {
 }
 
 //WithCharSeparator sets the Character Separator
-//The CharSeparator is the character used to separate two character inside a Word
+//The CharSeparator is the character used to separate two characters inside a Word
 func WithCharSeparator(charSeparator string) ConverterOption {
 	return func(c Converter) Converter {
 		c.charSeparator = charSeparator
